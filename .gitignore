@@ -1,0 +1,6 @@
+build
+.idea
+*.iml
+*.pro
+*.properties
+jniaexlib.jar
