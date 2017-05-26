@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidex.face.db.CardInfoDao;
@@ -29,6 +31,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +48,15 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     private CardInfoDao mCardInfoDao;
     private IdCardUtil mIdCardUtil;
     private IDCard idCard;
+    private Bitmap photo;
     private Bitmap head;
+    private TextView textViewName, textViewSex, textViewNation, textViewBirthday, textViewPIDNo, textViewAddress;//身份证信息
+    private ImageView imageViewPhoto;
+    private ImageView mImageViewFace1;
+    private ImageView mImageViewFace2;
+    private TextView mCmpPic;
+    private TextView face_time;//识别时间
+    private Mat newMat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +69,23 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
 
     public void initView() {
         initDetectionView();//初始化检测人脸的View
+        //身份证信息view
+        textViewName = (TextView) findViewById(R.id.textViewName);
+        textViewSex = (TextView) findViewById(R.id.textViewSex);
+        textViewBirthday = (TextView) findViewById(R.id.textViewBirthday);
+        textViewNation = (TextView) findViewById(R.id.textViewNation);
+        textViewAddress = (TextView) findViewById(R.id.textViewAddress);
+        textViewPIDNo = (TextView) findViewById(R.id.textViewPIDNo);
+        imageViewPhoto = (ImageView) findViewById(R.id.imageViewPhoto);
+        mImageViewFace1 = (ImageView) findViewById(R.id.face1);
+        mImageViewFace2 = (ImageView) findViewById(R.id.face2);
+        face_time = (TextView) findViewById(R.id.face_time);
+        mCmpPic = (TextView) findViewById(R.id.text_view);
+
         Button btn_saveface = (Button) findViewById(R.id.btn_saveCardInfo);//存储身份信息
+        Button btn_lookFaceList = (Button) findViewById(R.id.btn_lookFaceList);//查看存储列表
         btn_saveface.setOnClickListener(this);
+        btn_lookFaceList.setOnClickListener(this);
     }
 
     /**
@@ -70,21 +96,6 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
         mCardInfoDao = CardInfoDao.getInstance(this);
     }
 
-    /**
-     * 存入人脸,将bitmap保存至固定路径下
-     */
-    public void saveFace(Mat mat, final Rect rect) {
-        if (checkIsSave(mat, rect)) {//为真表示存入
-            long millis = System.currentTimeMillis();
-            //存入数据
-            FaceUtil.saveImage(this, mat, rect, millis + ".png");
-
-            Log.e(TAG, "录入完成");
-        } else {
-            Log.e(TAG, "重复录入");
-
-        }
-    }
 
     /**
      * 检测人脸是否存在，相似度大于60%为存在，不予存储
@@ -181,7 +192,6 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.btn_lookFaceList://查看人脸列表
-
                 Intent intent = new Intent(FaceActivity.this, ImageListActivity.class);
                 startActivity(intent);
                 break;
@@ -209,37 +219,77 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     public void onFace(Mat mat, Rect rect) {
         Mat matGray = FaceUtil.grayChange(mat, rect);//将检测的人脸置灰且变成固定大小，100x100
         Mat mCharacteristic = FaceUtil.extractORB(matGray);//拿着检测到的人脸去提取图片特征
-        saveFace(mat, rect);//自动存储人脸信息
+        //saveFace(mat, rect);//自动存储人脸信息
 
         FaceUtil.saveImage(FaceActivity.this, mat, rect, "face");
         head = FaceUtil.getImage(FaceActivity.this, "face");
 
-        long startTime = System.currentTimeMillis();
-        double cmp = FaceUtil.match(mCharacteristic, mCharacteristic);//计算相似度,临时变量
-        long afterTime = System.currentTimeMillis();
+        if (newMat != null && mCharacteristic != null) {
+            long startTime = System.currentTimeMillis();
+            double cmp = FaceUtil.match(mCharacteristic, newMat);//计算相似度,临时变量
+            long afterTime = System.currentTimeMillis();
+            UpdateFaceResult(mat, rect, cmp, startTime - afterTime);
+        }
 
 
     }
 
+    private void UpdateFaceResult(final Mat mat, final Rect rect, final double lcmp, final long time) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (idCard != null) {
+                    if (null == mat) {
+                        mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
+                    } else {
+                        face_time.setText("识别时间:" + (time) + "ms");
+
+                        if (lcmp > 50) {
+                            mCmpPic.setText(String.format("相似度 :  高（%.2f%%）", lcmp));
+                        } else if (lcmp >= 40 && lcmp <= 50) {
+                            //FaceUtil.saveImage(FaceCardActivity.this,mat,rect,FACE1);
+                            //mBitmapFace1 = FaceUtil.getImage(FaceCardActivity.this,FACE1);
+                            //mImageViewFace1.setImageBitmap(mBitmapFace1);
+                            //mCmpPic.setText("相似度 :  中");
+                        } else {
+                            //mCmpPic.setText("相似度 :  低");
+                        }
+
+//                        mCmpPic.setText(String.format("相似度 :  %.2f", cmp) + "%   ");
+//                        if (cmp > 50) {
+//                            tv_sussess.setText("成功次数:" + times++);
+//                        } else {
+//                            tv_error.setText("失败次数:" + errorTimes++);
+//                        }
+
+                    }
+                } else {
+                    mCmpPic.setText("相似度 :    ");
+                    face_time.setText("识别时间:");
+                    mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
+                }
+            }
+        });
+    }
 
     /**
-     * 获取存储的图片
+     * 根据身份证获取存储的信息
      */
     public Map<String, String> getMap(String idnum) {
         List<Map<String, String>> maps = null;
         try {
             maps = InitUtil.parseJson();
 
-            for (int i=0;i<maps.size();i++){
+            for (int i = 0; i < maps.size(); i++) {
                 Map<String, String> map = maps.get(i);
-                if(map.get("idnum").equals(idnum)){
+                if (map.get("idnum").equals(idnum)) {
                     return map;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-       return null;
+        return null;
     }
 
     /**
@@ -251,19 +301,72 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     public void callBack(int a) {
         if (a == IdCardUtil.READ) {
             idCard = mIdCardUtil.getIdCard();
-//            if (idCard != null) {//不自动存储
-//                saveCardInfo(idCard);
-//                idCard = null;
-//            }
-        }
+            if (idCard != null) {//不自动存储
+                photo = idCard.getPhoto();
+                Mat mat = new Mat();
+                Map<String, String> map = getMap(idCard.getIDCardNo());
+                String headPath = map.get("head");
+                Bitmap bitmap = getBitmap(headPath);
+                Utils.bitmapToMat(bitmap, mat);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
+                //提取图片特征
+                newMat = FaceUtil.extractORB(mat);//从存储的信息中取出的图片
 
             }
-        });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (idCard == null) {
+                        textViewName.setText("姓名:");
+                        textViewSex.setText("性别");
+                        textViewBirthday.setText("生日:");
+                        textViewNation.setText("名族:");
+                        textViewAddress.setText("住址：");
+                        textViewPIDNo.setText("身份证号码:");
+                        imageViewPhoto.setImageResource(R.drawable.photo);
+                        mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
+                    } else {
+                        textViewName.setText("姓名:" + idCard.getName());
+                        textViewSex.setText("性别:" + idCard.getSex());
+                        textViewBirthday.setText("生日:" + idCard.getBirthday());
+                        textViewNation.setText("名族:" + idCard.getNation());
+                        textViewAddress.setText("住址:" + idCard.getAddress());
+                        textViewPIDNo.setText("身份证号码:" + idCard.getIDCardNo());
+                        imageViewPhoto.setImageBitmap(photo);
+                        mImageViewFace2.setImageBitmap(photo);
+                    }
+
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textViewName.setText("姓名:");
+                    textViewSex.setText("性别");
+                    textViewBirthday.setText("生日:");
+                    textViewNation.setText("名族:");
+                    textViewAddress.setText("住址：");
+                    textViewPIDNo.setText("身份证号码:");
+                    imageViewPhoto.setImageResource(R.drawable.photo);
+                    mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
+                }
+            });
+        }
+
+    }
+
+
+    public Bitmap getBitmap(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+
+            Bitmap bm = BitmapFactory.decodeFile(path);
+
+            return bm;
+        }
+        return null;
+
     }
 
     /**
@@ -304,5 +407,21 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         mIdCardUtil.close();
+    }
+
+    /**
+     * 存入人脸,将bitmap保存至固定路径下
+     */
+    public void saveFace(Mat mat, final Rect rect) {
+        if (checkIsSave(mat, rect)) {//为真表示存入
+            long millis = System.currentTimeMillis();
+            //存入数据
+            FaceUtil.saveImage(this, mat, rect, millis + ".png");
+
+            Log.e(TAG, "录入完成");
+        } else {
+            Log.e(TAG, "重复录入");
+
+        }
     }
 }
