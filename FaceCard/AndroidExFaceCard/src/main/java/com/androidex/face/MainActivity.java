@@ -11,7 +11,7 @@ import android.widget.Toast;
  * Created by cts on 17/5/26.
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +42,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, "人脸识别", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_face_demo://人脸识别
-                Intent intent_face = new Intent(MainActivity.this, FaceActivity.class);
-                startActivity(intent_face);
-                Toast.makeText(MainActivity.this, "人脸识别", Toast.LENGTH_LONG).show();
-                break;
-
-            case R.id.btn_facecard_demo://人证合一
-                Intent intent = new Intent(MainActivity.this, FaceCardActivity.class);
-                startActivity(intent);
-                Toast.makeText(MainActivity.this, "人证合一", Toast.LENGTH_LONG).show();
-                break;
-
-        }
     }
 }
