@@ -245,7 +245,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
             long startTime = System.currentTimeMillis();
             double cmp = FaceUtil.match(mCharacteristic, newMat);//计算相似度
             long afterTime = System.currentTimeMillis();
-            long time = startTime - afterTime;
+            long time = afterTime - startTime;
             UpdateFaceResult(mat, rect, cmp, time);
         }
     }
@@ -258,22 +258,8 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                     if (null == mat) {
                         mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
                     } else {
-
                         face_time.setText("识别时间:" + (time) + "ms");
-
-                        if (lcmp > 50) {
-                            mCmpPic.setText(String.format("相似度 :  高（%.2f%%）", lcmp));
-                        } else if (lcmp >= 40 && lcmp <= 50) {
-                            mCmpPic.setText(String.format("相似度 :  中（%.2f%%）", lcmp));
-                            //FaceUtil.saveImage(FaceCardActivity.this,mat,rect,FACE1);
-                            //mBitmapFace1 = FaceUtil.getImage(FaceCardActivity.this,FACE1);
-                            //mImageViewFace1.setImageBitmap(mBitmapFace1);
-                            //mCmpPic.setText("相似度 :  中");
-                        } else {
-                            mCmpPic.setText(String.format("相似度 :  低（%.2f%%）", lcmp));
-                            //mCmpPic.setText("相似度 :  低");
-                        }
-
+                        mCmpPic.setText(String.format("相似度 :  %.2f%%", lcmp));
                     }
                 } else {
                     mCmpPic.setText("相似度 :    ");
@@ -360,6 +346,8 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                             textViewNation.setText("名族:");
                             textViewAddress.setText("住址：");
                             textViewPIDNo.setText("身份证号码:");
+                            face_time.setText("识别时间:");
+                            mCmpPic.setText("相似度 :  ");
                             imageViewPhoto.setImageResource(R.drawable.photo);
                             mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
                             newMat = null;
@@ -372,6 +360,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                             textViewNation.setText("名族:" + idCard.getNation());
                             textViewAddress.setText("住址:" + idCard.getAddress());
                             textViewPIDNo.setText("身份证号码:" + idCard.getIDCardNo());
+
                             imageViewPhoto.setImageBitmap(photo);
                             mImageViewFace2.setImageBitmap(photo);
                         }
@@ -388,6 +377,9 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                         textViewNation.setText("名族:");
                         textViewAddress.setText("住址：");
                         textViewPIDNo.setText("身份证号码:");
+                        face_time.setText("识别时间:");
+                        face_time.setText("识别时间:");
+                        mCmpPic.setText("相似度 :  ");
                         imageViewPhoto.setImageResource(R.drawable.photo);
                         mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
                         matFace = null;
@@ -397,7 +389,25 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
             }
-
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textViewName.setText("姓名:");
+                    textViewSex.setText("性别");
+                    textViewBirthday.setText("生日:");
+                    textViewNation.setText("名族:");
+                    textViewAddress.setText("住址：");
+                    textViewPIDNo.setText("身份证号码:");
+                    face_time.setText("识别时间:");
+                    face_time.setText("识别时间:");
+                    mCmpPic.setText("相似度 :  ");
+                    imageViewPhoto.setImageResource(R.drawable.photo);
+                    mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
+                    matFace = null;
+                    newMat = null;
+                }
+            });
         }
     }
 

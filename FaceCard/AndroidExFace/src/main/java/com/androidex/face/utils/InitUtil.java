@@ -202,7 +202,7 @@ public class InitUtil {
     }
 
     /**
-
+     * 读取文件，
      * @return
      */
     public static String getString2Txt() {
@@ -230,7 +230,6 @@ public class InitUtil {
                 return str;
             }
         }
-        Log.e(TAG, "===文件为空");
         return null;
     }
 
