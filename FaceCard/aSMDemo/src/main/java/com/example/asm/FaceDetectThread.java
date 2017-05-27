@@ -22,7 +22,7 @@ public class FaceDetectThread extends Thread {
 
 	public void assignTask(int id, Mat src) {
 
-		// do face detect
+		// do facecard detect
 		if (id == Params.DO_FACE_DETECT) {
 			Message msg = new Message();
 			msg.what = Params.DO_FACE_DETECT;

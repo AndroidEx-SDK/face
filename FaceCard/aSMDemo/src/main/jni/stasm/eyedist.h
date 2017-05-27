@@ -7,10 +7,10 @@
 
 namespace stasm
 {
-double EyeMouthDist(     // eye-mouth distance of a face shape
+double EyeMouthDist(     // eye-mouth distance of a facecard shape
     const Shape& shape); // in
 
-double InterEyeDist(     // inter-pupil distance of a face shape
+double InterEyeDist(     // inter-pupil distance of a facecard shape
     const Shape& shape); // in:
 
 } // namespace stasm

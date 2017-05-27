@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener, PictureCa
 //		Log.d(TAG, "camera is released");
         Intent intent = new Intent(MainActivity.this, FaceDetectActivity.class);
         startActivity(intent);
-        Log.d(TAG, "go to the face detect activity");
+        Log.d(TAG, "go to the facecard detect activity");
         finish();
         Log.d(TAG, "camera is released");
 
@@ -80,7 +80,7 @@ public class MainActivity extends Activity implements OnClickListener, PictureCa
 //		
 //		Intent intent = new Intent (MainActivity.this,FaceDetectActivity.class);
 //		startActivity(intent);
-//		Log.d(TAG, "go to the face detect activity");
+//		Log.d(TAG, "go to the facecard detect activity");
 //		finish();
 //		Log.d(TAG, "camera is released");
 

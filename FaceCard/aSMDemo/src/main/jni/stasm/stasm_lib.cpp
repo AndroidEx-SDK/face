@@ -9,7 +9,7 @@ using namespace stasm;
 const char* const stasm_VERSION = STASM_VERSION;
 
 static vec_Mod mods_g;    // the ASM model(s)
-static FaceDet facedet_g; // the face detector
+static FaceDet facedet_g; // the facecard detector
 static Image   img_g;     // the current image
 
 //-----------------------------------------------------------------------------
@@ -58,9 +58,9 @@ static const Shape LandmarksAsShape( // return a Shape
 //-----------------------------------------------------------------------------
 
 int stasm_init_ext(        // extended version of stasm_init
-    const char* datadir,   // in: directory of face detector files
+    const char* datadir,   // in: directory of facecard detector files
     int         trace,     // in: 0 normal use, 1 trace to stdout and stasm.log
-    void*       detparams) // in: NULL or face detector parameters
+    void*       detparams) // in: NULL or facecard detector parameters
 {
     int returnval = 1;     // assume success
     CatchOpenCvErrs();
@@ -95,7 +95,7 @@ int stasm_init_ext(        // extended version of stasm_init
 }
 
 int stasm_init(            // call once, at bootup (to read models from disk)
-    const char* datadir,   // in: directory of face detector files
+    const char* datadir,   // in: directory of facecard detector files
     int         trace)     // in: 0 normal use, 1 trace to stdout and stasm.log
 {
     return stasm_init_ext(datadir, trace, NULL);
@@ -106,8 +106,8 @@ int stasm_open_image_ext(  // extended version of stasm_open_image
     int         width,     // in: image width
     int         height,    // in: image height
     const char* imgpath,   // in: image path, used only for err msgs and debug
-    int         multiface, // in: 0=return only one face, 1=allow multiple faces
-    int         minwidth,  // in: min face width as percentage of img width
+    int         multiface, // in: 0=return only one facecard, 1=allow multiple faces
+    int         minwidth,  // in: min facecard width as percentage of img width
     void*       user)      // in: NULL or pointer to user abort func
 {
     int returnval = 1;     // assume success
@@ -122,7 +122,7 @@ int stasm_open_image_ext(  // extended version of stasm_open_image
 
         img_g = Image(height, width,(unsigned char*)img);
 
-        // call the face detector to detect the face rectangle(s)
+        // call the facecard detector to detect the facecard rectangle(s)
         facedet_g.DetectFaces_(img_g, imgpath, multiface == 1, minwidth, user);
     }
     catch(...)
@@ -138,20 +138,20 @@ int stasm_open_image(      // call once per image, detect faces
     int         width,     // in: image width
     int         height,    // in: image height
     const char* imgpath,   // in: image path, used only for err msgs and debug
-    int         multiface, // in: 0=return only one face, 1=allow multiple faces
-    int         minwidth)  // in: min face width as percentage of img width
+    int         multiface, // in: 0=return only one facecard, 1=allow multiple faces
+    int         minwidth)  // in: min facecard width as percentage of img width
 {
     return stasm_open_image_ext(img, width, height, imgpath,
                                 multiface, minwidth, NULL);
 }
 
 int stasm_search_auto_ext( // extended version of stasm_search_auto
-    int*   foundface,      // out: 0=no more faces, 1=found face
+    int*   foundface,      // out: 0=no more faces, 1=found facecard
     float* landmarks,      // out: x0, y0, x1, y1, ..., caller must allocate
     float* estyaw)         // out: NULL or pointer to estimated yaw
 {
     int returnval = 1;     // assume success
-    *foundface = 0;        // but assume no face found
+    *foundface = 0;        // but assume no facecard found
     CatchOpenCvErrs();
     try
     {
@@ -163,9 +163,9 @@ int stasm_search_auto_ext( // extended version of stasm_search_auto
         Shape shape;       // the shape with landmarks
         Image face_roi;    // cropped to area around startshape and possibly rotated
         DetPar detpar_roi; // detpar translated to ROI frame
-        DetPar detpar;     // params returned by face det, in img frame
+        DetPar detpar;     // params returned by facecard det, in img frame
 
-        // Get the start shape for the next face in the image, and the ROI around it.
+        // Get the start shape for the next facecard in the image, and the ROI around it.
         // The shape will be wrt the ROI frame.
         if (NextStartShapeAndRoi(shape, face_roi, detpar_roi, detpar,
                                  img_g, mods_g, facedet_g))
@@ -176,7 +176,7 @@ int stasm_search_auto_ext( // extended version of stasm_search_auto
                 LogShape(RoiShapeToImgFrame(shape, face_roi, detpar_roi, detpar),
                          "auto_start");
 
-            // select an ASM model based on the face's yaw
+            // select an ASM model based on the facecard's yaw
             const int imod = ABS(EyawAsModIndex(detpar.eyaw, mods_g));
 
             // do the actual ASM search
@@ -199,20 +199,20 @@ int stasm_search_auto_ext( // extended version of stasm_search_auto
 }
 
 int stasm_search_auto( // call repeatedly to find all faces
-    int*   foundface,  // out: 0=no more faces, 1=found face
+    int*   foundface,  // out: 0=no more faces, 1=found facecard
     float* landmarks)  // out: x0, y0, x1, y1, ..., caller must allocate
 {
     return stasm_search_auto_ext(foundface, landmarks, NULL);
 }
 
 int stasm_search_single(   // wrapper for stasm_search_auto and friends
-    int*        foundface, // out: 0=no face, 1=found face
+    int*        foundface, // out: 0=no facecard, 1=found facecard
     float*      landmarks, // out: x0, y0, x1, y1, ..., caller must allocate
     const char* img,       // in: gray image data, top left corner at 0,0
     int         width,     // in: image width
     int         height,    // in: image height
     const char* imgpath,   // in: image path, used only for err msgs and debug
-    const char* datadir)   // in: directory of face detector files
+    const char* datadir)   // in: directory of facecard detector files
 {
     if (!stasm_init(datadir, 0 /*trace*/))
         return false;
@@ -247,7 +247,7 @@ int stasm_search_pinned(    // call after the user has pinned some points
         Image face_roi;    // img cropped to startshape area and maybe rotated
         Shape pinned_roi;  // pinned translated to ROI frame
         DetPar detpar_roi; // detpar translated to ROI frame
-        DetPar detpar;     // params returned by pseudo face det, in img frame
+        DetPar detpar;     // params returned by pseudo facecard det, in img frame
 
         PinnedStartShapeAndRoi(shape, face_roi, detpar_roi, detpar, pinned_roi,
                                img_g, mods_g, pinnedshape);

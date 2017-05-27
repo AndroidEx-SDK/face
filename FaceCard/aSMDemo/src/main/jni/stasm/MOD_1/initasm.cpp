@@ -9,7 +9,7 @@ namespace stasm
 {
 void InitMods(           // initialize ASM model
     vec_Mod&    mods,    // out: ASM model (only one model in this version of Stasm)
-    const char* datadir) // in: directory of face detector files
+    const char* datadir) // in: directory of facecard detector files
 {
     if (mods.empty())    // models not yet initialized?
     {

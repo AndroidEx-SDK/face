@@ -108,7 +108,7 @@ public class ImageUtils {
 							Params.FaceDetectParams.MIN_SIZE), new Size());
 
 			if (faces.toArray().length > 0) {
-				Log.d(TAG, "face detected");
+				Log.d(TAG, "facecard detected");
 				Rect[] rects = faces.toArray();
 				for (int i = 0; i < rects.length; i++) {
 					rects[i].x /= factor;
@@ -117,7 +117,7 @@ public class ImageUtils {
 					rects[i].height /= factor;
 
 					if (i == 0) {
-						// copy face region
+						// copy facecard region
 						src.submat(rects[i]).copyTo(face);
 					}
 

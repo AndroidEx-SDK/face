@@ -15,7 +15,7 @@ public class NativeCode {
 			double threshold2, int aperatureSize);
 	
 	/*
-	 * do face detect
+	 * do facecard detect
 	 * scaleFactor = 1.1
 	 * minNeighbors = 2
 	 * minSize = 30 (30 * 30)

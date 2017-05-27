@@ -93,8 +93,8 @@ void ApplyShapeModelHacks( // adjust shape by applying various hacks
             shape(L_RJaw08,     IY) -= yadjust;
         }
     }
-    // Possibly shift the side of face away from eye.
-    // Useful when the side of face is on the eye.
+    // Possibly shift the side of facecard away from eye.
+    // Useful when the side of facecard is on the eye.
 
     if (hackbits & SHAPEHACKS_SHIFT_TEMPLE_OUT)
     {

@@ -12,8 +12,8 @@ import org.opencv.utils.Converters;
 
 // C++: class FaceRecognizer
 /**
- * <p>All face recognition models in OpenCV are derived from the abstract base
- * class "FaceRecognizer", which provides a unified access to all face
+ * <p>All facecard recognition models in OpenCV are derived from the abstract base
+ * class "FaceRecognizer", which provides a unified access to all facecard
  * recongition algorithms in OpenCV.</p>
  *
  * <p>class FaceRecognizer : public Algorithm <code></p>
@@ -270,7 +270,7 @@ public class FaceRecognizer extends Algorithm {
  *
  * <p>Ptr<FaceRecognizer> model = createFisherFaceRecognizer();</p>
  *
- * <p>And finally train it on the given dataset (the face images and labels):
+ * <p>And finally train it on the given dataset (the facecard images and labels):
  * </code></p>
  *
  * <p>// This is the common interface to train all of the available

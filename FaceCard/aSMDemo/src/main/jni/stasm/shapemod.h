@@ -51,7 +51,7 @@ public:
 
     // all data remains constant after ShapeMod construction
 
-    const Shape    meanshape_; // mean shape aligned to face det frame
+    const Shape    meanshape_; // mean shape aligned to facecard det frame
     const VEC      eigvals_;   // neigs x 1 vector
     const MAT      eigvecs_;   // 2n x neigs matrix where n is nbr of landmarks
     const MAT      eigvecsi_;  // neigs x 2n matrix, inverse of eigvecs_

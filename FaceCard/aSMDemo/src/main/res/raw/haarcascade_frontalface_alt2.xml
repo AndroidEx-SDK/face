@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Tree-based 20x20 gentle adaboost frontal face detector.
+    Tree-based 20x20 gentle adaboost frontal facecard detector.
     Created by Rainer Lienhart.
 
 ////////////////////////////////////////////////////////////////////////////////////////

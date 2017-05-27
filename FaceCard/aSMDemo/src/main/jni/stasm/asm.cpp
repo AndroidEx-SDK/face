@@ -160,7 +160,7 @@ const
 #endif // not _OPENMP
 
 void Mod::LevSearch_(         // do an ASM search at one level in the image pyr
-    Shape&       shape,       // io: the face shape for this pyramid level
+    Shape&       shape,       // io: the facecard shape for this pyramid level
     int          ilev,        // in: pyramid level (0 is full size)
     const Image& img,         // in: image scaled to this pyramid level
     const Shape& pinnedshape) // in: if no rows then no pinned landmarks, else
@@ -211,7 +211,7 @@ static void CreatePyr(    // create image pyramid
 }
 
 Shape Mod::ModSearch_(            // returns coords of the facial landmarks
-        const Shape& startshape,  // in: startshape roughly positioned on face
+        const Shape& startshape,  // in: startshape roughly positioned on facecard
         const Image& img,         // in: grayscale image (typically just ROI)
         const Shape* pinnedshape) // in: pinned landmarks, NULL if nothing pinned
 const

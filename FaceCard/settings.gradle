@@ -1,1 +1,1 @@
-include ':AndroidExFaceCard', ':OpenCVLibrary320', ':openCVLibrary2411', ':aSMDemo', ':openCVLibrary2410', ':CameraFace'
+include ':AndroidExFaceCard', ':OpenCVLibrary320', ':openCVLibrary2411', ':aSMDemo', ':openCVLibrary2410', ':CameraFace', ':AndroidExFace'

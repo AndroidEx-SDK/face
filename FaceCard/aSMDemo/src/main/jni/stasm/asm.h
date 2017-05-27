@@ -28,7 +28,7 @@ class Mod // An ASM model for finding landmarks.
 {         // If multiple model Stasm, will use a separate Mod for each yaw range.
 public:
     Shape ModSearch_(                  // returns coords of the facial landmarks
-        const Shape& startshape,       // in: startshape roughly positioned on face
+        const Shape& startshape,       // in: startshape roughly positioned on facecard
         const Image& img,              // in: grayscale image (typically just ROI)
         const Shape* pinnedshape=NULL) // in: pinned landmarks, NULL if nothing pinned
     const;
@@ -100,7 +100,7 @@ private: // all data remains constant after Mod construction
 
     const ESTART   estart_;   // use the mouth/eyes to position the start shape?
 
-    const string   datadir_;  // directory of face detector files
+    const string   datadir_;  // directory of facecard detector files
 
     const ShapeMod shapemod_; // the shape model
 
@@ -117,7 +117,7 @@ private: // all data remains constant after Mod construction
     const;
 
     void LevSearch_(              // do an ASM search at one level in the image pyr
-        Shape&       shape,       // io: the face shape for this pyramid level
+        Shape&       shape,       // io: the facecard shape for this pyramid level
         int          ilev,        // in: pyramid level (0 is full size)
         const Image& img,         // in: image scaled to this pyramid level
         const Shape& pinnedshape) // in: if no rows then no pinned landmarks, else

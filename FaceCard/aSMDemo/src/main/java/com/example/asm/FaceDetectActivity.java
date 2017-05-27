@@ -97,7 +97,7 @@ public class FaceDetectActivity extends Activity implements PreviewCallback,
 		Mat src = new Mat();
 		Utils.bitmapToMat(bitmap, src);
 
-		// do face detection
+		// do facecard detection
 		Mat face = new Mat();
 		Mat detected = imageUtils.detectFacesAndExtractFace(src, face);
 		Bitmap detected_bitmap = ImageUtils.mat2Bitmap(detected);

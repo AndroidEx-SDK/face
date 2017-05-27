@@ -1429,7 +1429,7 @@ public class Core {
  *
  * <p>The covariance matrix will be <code>nsamples x nsamples</code>. Such an
  * unusual covariance matrix is used for fast PCA of a set of very large vectors
- * (see, for example, the EigenFaces technique for face recognition).
+ * (see, for example, the EigenFaces technique for facecard recognition).
  * Eigenvalues of this "scrambled" matrix match the eigenvalues of the true
  * covariance matrix. The "true" eigenvectors can be easily calculated from the
  * eigenvectors of the "scrambled" covariance matrix.</p>
@@ -1501,7 +1501,7 @@ public class Core {
  *
  * <p>The covariance matrix will be <code>nsamples x nsamples</code>. Such an
  * unusual covariance matrix is used for fast PCA of a set of very large vectors
- * (see, for example, the EigenFaces technique for face recognition).
+ * (see, for example, the EigenFaces technique for facecard recognition).
  * Eigenvalues of this "scrambled" matrix match the eigenvalues of the true
  * covariance matrix. The "true" eigenvectors can be easily calculated from the
  * eigenvectors of the "scrambled" covariance matrix.</p>

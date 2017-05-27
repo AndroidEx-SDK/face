@@ -30,8 +30,8 @@ private:
 
     int        patchwidth_;       // image patch is patchwidth x patchwidth pixels
 
-    MAT        magmat_;           // grad mag of the current image (face ROI)
-    MAT        orientmat_;        // grad orient of the current image (face ROI)
+    MAT        magmat_;           // grad mag of the current image (facecard ROI)
+    MAT        orientmat_;        // grad orient of the current image (facecard ROI)
 
     vec_int    row_indices_;      // histogram indices: these map a patch row,col
     vec_double row_fracs_;        // to the corresponding histogram grid row,col

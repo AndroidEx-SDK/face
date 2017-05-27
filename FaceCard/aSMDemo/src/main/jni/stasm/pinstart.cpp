@@ -205,7 +205,7 @@ static void InitDetParEyeMouthFromShape( // fill in eye and mouth fields of detp
     }
 }
 
-// We generated the startshape without using the face detector, now "back
+// We generated the startshape without using the facecard detector, now "back
 // generate" the detpar (the position of this does not have to exactly
 // match the detpar that would generate the startshape). This approach
 // allows detpar to be handled uniformly in PinnedStartShapeAndRoi.
@@ -250,7 +250,7 @@ static DetPar PseudoDetParFromStartShape(
     return detpar;
 }
 
-// Use the given pinned face landmarks to init the start shape.  The
+// Use the given pinned facecard landmarks to init the start shape.  The
 // current implementation works best if the pinned landmarks are the five
 // canonical pinned landmarks (viz. LEyeOuter, REyeOuter, CNoseTip,
 // LMouthCorner, RMouthCorner).  This is because it was trained on those
@@ -258,7 +258,7 @@ static DetPar PseudoDetParFromStartShape(
 
 void PinnedStartShapeAndRoi(   // use the pinned landmarks to init the start shape
     Shape&         startshape, // out: the start shape (in ROI frame)
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
     DetPar&        detpar,     // out: detpar wrt to img
     Shape&         pinned_roi, // out: pinned arg translated to ROI frame

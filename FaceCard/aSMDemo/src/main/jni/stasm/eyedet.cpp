@@ -12,9 +12,9 @@ static cv::CascadeClassifier mouth_det_g; // mouth detector
 
 //-----------------------------------------------------------------------------
 
-// Return the region of the face we search for the left or right eye.
+// Return the region of the facecard we search for the left or right eye.
 // Return rect of width=0 if eye must not be searched for (outer eyes in side views).
-// We reduce false positives and save time by searching in only part of the face.
+// We reduce false positives and save time by searching in only part of the facecard.
 // The entire eye box must fall in this region, not just the center of the eye.
 // The magic numbers below were found empirically to give good
 // results in informal tests.  They reduce the number of false positives
@@ -31,9 +31,9 @@ static Rect EyeSearchRect(
     {
         case EYAW00:                        // frontal model
             if (is_right_eye)
-                rect.x += width / 3; // don't search left third of face
+                rect.x += width / 3; // don't search left third of facecard
             rect.width -= width / 3; // or right third
-            rect.height = cvRound(.6 * facerect.height); // don't search lower part of face
+            rect.height = cvRound(.6 * facerect.height); // don't search lower part of facecard
             break;
         case EYAW_22:                       // left facing three-quarter model
             if (is_right_eye)               // inner eye
@@ -135,7 +135,7 @@ static void MouthRectShift(
         double theta = -atan2(double(yright - yleft), double(xright - xleft));
         // move the mouth in the direction of rotation
         xshift += .3 * facerect_height * tan(theta);
-        // as the face rotates, the mouth moves up the page
+        // as the facecard rotates, the mouth moves up the page
         yshift -= .1 * facerect_height * ABS(tan(theta));
     }
     ixshift = cvRound(xshift);
@@ -299,7 +299,7 @@ static void DetectAllMouths(
                facerect.width / 10);
 }
 
-// Return the region of the face which the _center_ of an eye must be for
+// Return the region of the facecard which the _center_ of an eye must be for
 // the eye to be considered valid.  This is a subset of the region we
 // search for eyes (as returned by EyeSearchRect, which must be big
 // enough to enclose the _entire_ eye box).
@@ -646,7 +646,7 @@ static void TweakMouthPosition(
          MouthVerticalShift(ileft_best, iright_best, imouth_best,
                             leyes, reyes, mouths);
 
-    // If face pose is strong three-quarter, move mouth
+    // If facecard pose is strong three-quarter, move mouth
     // out to counteract OpenCV mouth detector bias.
 
     if (detpar.eyaw == EYAW_45)
@@ -666,7 +666,7 @@ static void RectToImgFrame(
 
 void DetectEyesAndMouth(  // use OpenCV detectors to find the eyes and mouth
     DetPar&       detpar, // io: eye and mouth fields updated, other fields untouched
-    const Image&  img)    // in: ROI around face (already rotated if necessary)
+    const Image&  img)    // in: ROI around facecard (already rotated if necessary)
 {
     Rect facerect(cvRound(detpar.x - detpar.width/2),
                   cvRound(detpar.y - detpar.height/2),

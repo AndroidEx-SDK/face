@@ -10,8 +10,8 @@ namespace stasm
 class FaceDet
 {
 public:
-    void OpenFaceDetector_( // called by stasm_init, init face det from XML file
-        const char* datadir,      // in: directory of face detector files
+    void OpenFaceDetector_( // called by stasm_init, init facecard det from XML file
+        const char* datadir,      // in: directory of facecard detector files
         void*       detparams);   // in: unused (func signature compatibility)
 
     // Call DetectFaces_ once per image.  Then call NextFace_ repeatedly to get
@@ -27,11 +27,11 @@ public:
     void DetectFaces_(            // call once per image to find all the faces
         const Image& img,         // in: the image (grayscale)
         const char*  imgpath,     // in: unused (match virt func signature)
-        bool         multiface,   // in: if false, want only the best face
-        int          minwidth,    // in: min face width as percent of img width
+        bool         multiface,   // in: if false, want only the best facecard
+        int          minwidth,    // in: min facecard width as percent of img width
         void*        user);       // in: unused (match virt func signature)
 
-    const DetPar NextFace_(void); // get next face from faces found by DetectFaces_
+    const DetPar NextFace_(void); // get next facecard from faces found by DetectFaces_
 
     FaceDet() {}                  // constructor
 
@@ -39,7 +39,7 @@ public:
 private:
     vector<DetPar>  detpars_;     // all the valid faces in the current image
 
-    int             iface_;       // index of current face for NextFace_
+    int             iface_;       // index of current facecard for NextFace_
                                   // indexes into detpars_
 
     DISALLOW_COPY_AND_ASSIGN(FaceDet);

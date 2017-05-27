@@ -6,9 +6,9 @@
 // concealed by the side of the nose.  When calculating the inter-eye
 // distance, if the pupil is missing we can instead use a point near the
 // pupil.  We must then adjust the point-to-point distance calculated using
-// this surrogate point.  We use the mean face shape to figure out the
+// this surrogate point.  We use the mean facecard shape to figure out the
 // adjustment.  The accuracy of the resulting estimated inter-eye distance will
-// depend upon how similar the proportions of the face are to the mean face.
+// depend upon how similar the proportions of the facecard are to the mean facecard.
 //
 // Copyright (C) 2005-2013, Stephen Milborrow
 
@@ -47,7 +47,7 @@ static double CanonicalEyeMouthDist( // return 0 if pupils and mouth not avail
              shape17(L17_CBotOfBotLip, IY));
 }
 
-double EyeMouthDist(    // eye-mouth distance of a face shape
+double EyeMouthDist(    // eye-mouth distance of a facecard shape
     const Shape& shape) // in
 {
     static const int eyes[] = // surrogates for pupil midpoint
@@ -94,7 +94,7 @@ double EyeMouthDist(    // eye-mouth distance of a face shape
     return eyemouth;
 }
 
-double InterEyeDist(    // inter-pupil distance of a face shape
+double InterEyeDist(    // inter-pupil distance of a facecard shape
     const Shape& shape) // in
 {
     static const int leyes[] = // surrogates for left pupil

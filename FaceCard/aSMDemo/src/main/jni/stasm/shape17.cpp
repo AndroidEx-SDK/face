@@ -197,7 +197,7 @@ static void TweakHelen(
     }
 }
 
-Shape Shape17(          // convert an arb face shape to a 17 point shape
+Shape Shape17(          // convert an arb facecard shape to a 17 point shape
     const Shape& shape) // in
 {
     const int* const tab = Shape17Tab(shape);

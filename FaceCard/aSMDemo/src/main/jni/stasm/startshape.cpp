@@ -5,20 +5,20 @@
 // The current open-source version of Stasm uses estart=ESTART_EYES.
 //
 // 1. With the model estart=ESTART_RECT_ONLY, the start shape is created by
-// aligning the model mean face shape to the face rectangle.  (The face
-// rectangle is found by the face detector prior to calling routines in
+// aligning the model mean facecard shape to the facecard rectangle.  (The facecard
+// rectangle is found by the facecard detector prior to calling routines in
 // this file.)
 //
 // 2. With the model estart=ESTART_EYES (currently used for the frontal
-// model), the start shape is created as follows.  Using the face rectangle
-// found by the face detector, Stasm searches for the eyes in the
+// model), the start shape is created as follows.  Using the facecard rectangle
+// found by the facecard detector, Stasm searches for the eyes in the
 // appropriate subregions within the rectangle.  If both eyes are found the
-// face is rotated so the eyes are horizontal.  The start shape is then
+// facecard is rotated so the eyes are horizontal.  The start shape is then
 // formed by aligning the mean training shape to the eyes.  If either eye
-// isn't found, the start shape is aligned to the face detector rectangle.
+// isn't found, the start shape is aligned to the facecard detector rectangle.
 //
 // Note however that if the eye angle is less than +-5 degrees, we treat it
-// as 0 degrees (and don't rotate the face as described above).  This
+// as 0 degrees (and don't rotate the facecard as described above).  This
 // minimizes preprocessing.
 //
 // 3. With the model estart=ESTART_EYE_AND_MOUTH (currently used for the
@@ -33,25 +33,25 @@ namespace stasm
 {
 // The constant 200 is arbitrary, except that the value used by Stasm
 // must match that used by Tasm when training the model.  Using 200 instead
-// of say, 1, means that the detector average face is displayable at a decent
+// of say, 1, means that the detector average facecard is displayable at a decent
 // size which is useful for debugging.
 
 static const int DET_FACE_WIDTH = 200;
 
 // Following used if we did not detect eyes.  We empirically get slighter better
-// Stasm results if we slightly reduce the size of the detected face rectangle.
+// Stasm results if we slightly reduce the size of the detected facecard rectangle.
 
 static double FACERECT_SCALE_WHEN_NO_EYES = .95;
 
 //-----------------------------------------------------------------------------
 
-// Align meanshape to the face detector rectangle and return it as startshape
+// Align meanshape to the facecard detector rectangle and return it as startshape
 // This ignores the eye and mouth, if any.
 
 static Shape AlignMeanShapeToFaceDetRect(
     const DetPar& detpar,                 // in
     const Shape&  meanshape,              // in
-    double        scale,                  // in: scale the face rectangle
+    double        scale,                  // in: scale the facecard rectangle
     const Image&  img)                    // io: the image (grayscale)
 {
     if (trace_g)
@@ -77,7 +77,7 @@ static Shape AlignMeanShapeToFaceDetRect(
 // Return the model meanshape aligned to both eyes and the mouth.
 //
 // The central idea is to form a triangular shape of the eyes and
-// bottom-of-mouth from the face detector params, and align the same
+// bottom-of-mouth from the facecard detector params, and align the same
 // triangle in the meanshape to this triangle.
 
 static Shape AlignMeanShapeToBothEyesAndMouth(
@@ -282,7 +282,7 @@ static void FlipIfLeftFacing(
         shape = FlipShape(shape, ncols);
 }
 
-// Align the model meanshape to the detpar from the face and feature dets.
+// Align the model meanshape to the detpar from the facecard and feature dets.
 // Complexity enters in because the detected eyes and mouth may be useful
 // if available.  The "left facing" code is needed because our three
 // quarter models are for right facing faces (wrt the viewer).
@@ -336,7 +336,7 @@ static Shape StartShapeFromDetPar(
         startshape = AlignMeanShapeToRightEyeAndMouth(detpar_roi, meanshape1);
         FlipIfLeftFacing(startshape, detpar_roi.eyaw, face_roi.cols);
     }
-    else // last resort: use the face det rectangle (can't use facial features)
+    else // last resort: use the facecard det rectangle (can't use facial features)
     {
         startshape =
             AlignMeanShapeToFaceDetRect(detpar_roi, meanshape1,
@@ -345,7 +345,7 @@ static Shape StartShapeFromDetPar(
     return JitterPointsAt00(startshape);
 }
 
-static double EstRotFromEyeAngle( // estimate face rotation from intereye angle
+static double EstRotFromEyeAngle( // estimate facecard rotation from intereye angle
     const DetPar& detpar)         // in: detpar wrt the ROI
 {
     double rot = 0;
@@ -357,42 +357,42 @@ static double EstRotFromEyeAngle( // estimate face rotation from intereye angle
     return rot;
 }
 
-// Get the start shape and the ROI around it, given the face rectangle.
+// Get the start shape and the ROI around it, given the facecard rectangle.
 // Depending on the estart field in the model, we detect the eyes
 // and mouth and use those to help fit the start shape.
 // (Note also that the ROI is flipped if necessary because our three-quarter
-// models are right facing and the face may be left facing.)
+// models are right facing and the facecard may be left facing.)
 
 static void StartShapeAndRoi(  // we have the facerect, now get the rest
     Shape&         startshape, // out: the start shape we are looking for
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
-    DetPar&        detpar,     // io:  detpar wrt to img (has face rect on entry)
+    DetPar&        detpar,     // io:  detpar wrt to img (has facecard rect on entry)
     const Image&   img,        // in:  the image (grayscale)
     const vec_Mod& mods)       // in:  a vector of models, one for each yaw range
                                //       (use only estart, and meanshape)
 {
     PossiblySetRotToZero(detpar.rot);         // treat small rots as zero rots
 
-    FaceRoiAndDetPar(face_roi, detpar_roi,    // get ROI around face
+    FaceRoiAndDetPar(face_roi, detpar_roi,    // get ROI around facecard
                      img, detpar, false);
 
     DetectEyesAndMouth(detpar_roi,            // use OpenCV eye and mouth detectors
                        face_roi);
 
-    // Some face detectors return the face rotation, some don't (in
+    // Some facecard detectors return the facecard rotation, some don't (in
     // the call to NextFace_ just made via NextStartShapeAndRoi).
     // If we don't have the rotation, then estimate it from the eye
     // angle, if the eyes are available.
 
-    if (!Valid(detpar.rot)) // don't have the face rotation?
+    if (!Valid(detpar.rot)) // don't have the facecard rotation?
     {
         detpar_roi.rot = EstRotFromEyeAngle(detpar_roi);
         PossiblySetRotToZero(detpar_roi.rot);
         detpar.rot = detpar_roi.rot;
         if (detpar.rot != 0)
         {
-            // face is rotated: rotate ROI and re-get the eyes and mouth
+            // facecard is rotated: rotate ROI and re-get the eyes and mouth
 
             // TODO: Prevent bogus OpenCV assert fail face_roi.data == img.data.
             face_roi = Image(0,0);
@@ -411,7 +411,7 @@ static void StartShapeAndRoi(  // we have the facerect, now get the rest
         logprintf("%-6.6s yaw %3.0f rot %3.0f ",
             EyawAsString(detpar_roi.eyaw), detpar_roi.yaw, detpar_roi.rot);
 
-    // select an ASM model based on the face's yaw
+    // select an ASM model based on the facecard's yaw
     const Mod* mod = mods[ABS(EyawAsModIndex(detpar_roi.eyaw, mods))];
 
     const ESTART estart = mod->Estart_();
@@ -427,32 +427,32 @@ static void StartShapeAndRoi(  // we have the facerect, now get the rest
 
 }
 
-// Get the start shape for the next face in the image, and the ROI around it.
+// Get the start shape for the next facecard in the image, and the ROI around it.
 // The returned shape is wrt the ROI frame.
 //
-// Note that we we previously called the face detector, and the face
+// Note that we we previously called the facecard detector, and the facecard
 // rectangle(s) were saved privately in facedet, and are now ready for
 // immediate retrieval by NextFace_.
 //
 // The following comment applies for three-quarter models (not for frontal
-// models): If the three-quarter face is left-facing, we flip the ROI so
-// the returned face is right-facing.  This is because our three-quarter
+// models): If the three-quarter facecard is left-facing, we flip the ROI so
+// the returned facecard is right-facing.  This is because our three-quarter
 // ASM models are for right-facing faces.  For frontal faces (the yaw00
 // model), faces are not flipped.
 
-bool NextStartShapeAndRoi(     // use face detector results to estimate start shape
+bool NextStartShapeAndRoi(     // use facecard detector results to estimate start shape
     Shape&         startshape, // out: the start shape
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
     DetPar&        detpar,     // out: detpar wrt to img
     const Image&   img,        // in:  the image (grayscale)
     const vec_Mod& mods,       // in:  a vector of models, one for each yaw range
                                //       (use only estart, and meanshape)
-    FaceDet&       facedet)    // io:  the face detector (internal face index bumped)
+    FaceDet&       facedet)    // io:  the facecard detector (internal facecard index bumped)
 {
-    detpar = facedet.NextFace_();  // get next face's detpar from the face det
+    detpar = facedet.NextFace_();  // get next facecard's detpar from the facecard det
 
-    if (Valid(detpar.x))           // NextFace_ returned a face?
+    if (Valid(detpar.x))           // NextFace_ returned a facecard?
         StartShapeAndRoi(startshape, face_roi, detpar_roi, detpar, img, mods);
 
     return Valid(detpar.x);

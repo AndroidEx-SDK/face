@@ -655,7 +655,7 @@ void FlipImgInPlace(Image& img) // io: flip image horizontally (mirror image)
     img = FlipImg(img);
 }
 
-void OpenDetector( // open face or feature detector from its XML file
+void OpenDetector( // open facecard or feature detector from its XML file
     cv::CascadeClassifier& cascade,  // out
     const char*            filename, // in: basename.ext of cascade
     const char*            datadir)  // in
@@ -727,7 +727,7 @@ vec_Rect Detect(                            // detect faces or facial features
     return feats;
 }
 
-bool IsLeftFacing(EYAW eyaw) // true if eyaw is for a left facing face
+bool IsLeftFacing(EYAW eyaw) // true if eyaw is for a left facing facecard
 {
     return int(eyaw) <= int(EYAW_22);
 }

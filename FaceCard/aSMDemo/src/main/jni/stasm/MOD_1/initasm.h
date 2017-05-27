@@ -9,7 +9,7 @@ namespace stasm
 {
 void InitMods(
     vec_Mod&    mods,     // out: ASM model (only one model in this version of Stasm)
-    const char* datadir); // in: directory of face detector files
+    const char* datadir); // in: directory of facecard detector files
 
 } // namespace stasm
 #endif // STASM_INITASM_H

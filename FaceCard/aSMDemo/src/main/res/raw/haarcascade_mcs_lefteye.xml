@@ -65,7 +65,7 @@ If you are using any of the detectors or involved ideas please cite one of these
   file = F
 }
 
-A comparison of this and other face related classifiers can be found in:
+A comparison of this and other facecard related classifiers can be found in:
 
 @InProceedings{Castrillon08a-visapp,
  'athor =       "Modesto Castrill\'on-Santana and O. D\'eniz-Su\'arez, L. Ant\'on-Canal\'{\i}s and J. Lorenzo-Navarro",

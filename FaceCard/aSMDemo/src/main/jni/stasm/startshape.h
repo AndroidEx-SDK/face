@@ -7,20 +7,20 @@
 
 namespace stasm
 {
-// get the start shape for the next face in the image, and the ROI around it
+// get the start shape for the next facecard in the image, and the ROI around it
 
-bool NextStartShapeAndRoi(     // use face detector results to estimate start shape
+bool NextStartShapeAndRoi(     // use facecard detector results to estimate start shape
     Shape&         startshape, // out: the start shape we are looking for
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
     DetPar&        detpar,     // out: detpar wrt to img
     const Image&   img,        // in: the image (grayscale)
     const vec_Mod& mods,       // in: a vector of models, one for each yaw range
-    FaceDet&       facedet);   // io:  the face detector (internal face index bumped)
+    FaceDet&       facedet);   // io:  the facecard detector (internal facecard index bumped)
 
 void PinnedStartShapeAndRoi(   // use the pinned landmarks to init the start shape
     Shape&         startshape, // out: the start shape (in ROI frame)
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
     DetPar&        detpar,     // out: detpar wrt to img
     Shape&         pinned_roi, // out: pinned arg translated to ROI frame

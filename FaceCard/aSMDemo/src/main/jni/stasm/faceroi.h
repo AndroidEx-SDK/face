@@ -7,12 +7,12 @@
 
 namespace stasm
 {
-// RoiFrac controls the size of the ROI area around the face.  So for
+// RoiFrac controls the size of the ROI area around the facecard.  So for
 // example leftfrac is the distance from the center to the left margin in
 // units of the original detector rect width.  So ROI_FRAC=.5, say, would
-// return the original face detector rectangle.
+// return the original facecard detector rectangle.
 
-static const double ROI_FRAC = 1.0; // ROI is double the face detector width
+static const double ROI_FRAC = 1.0; // ROI is double the facecard detector width
 
 Shape ImgShapeToRoiFrame(     // return shape in ROI frame
     const Shape&  shape,      // in: shape in image frame
@@ -28,7 +28,7 @@ Shape RoiShapeToImgFrame(     // return shape in image frame
 void PossiblySetRotToZero(    // avoid rotating the image unnecessarily
     double& rot);             // io
 
-void FaceRoiAndDetPar(        // extract ROI around the face, rotate if necessary
+void FaceRoiAndDetPar(        // extract ROI around the facecard, rotate if necessary
     Image&        face_roi,   // out
     DetPar&       detpar_roi, // out: detpar wrt the ROI
     const Image&  img,        // in: original image

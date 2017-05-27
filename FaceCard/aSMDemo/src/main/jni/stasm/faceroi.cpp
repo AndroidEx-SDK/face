@@ -12,7 +12,7 @@ static const double ROT_TREAT_AS_ZERO = 5;
 
 //-----------------------------------------------------------------------------
 
-// Return a rect which covers the face with enough space around it for an
+// Return a rect which covers the facecard with enough space around it for an
 // ASM search, but also ensuring that the rect is in the image boundaries.
 
 static Rect RoiRect(
@@ -172,7 +172,7 @@ void PossiblySetRotToZero( // this is to avoid rotating the image unnecessarily
         rot = 0;
 }
 
-void FaceRoiAndDetPar(        // get ROI around the face, rotate if necessary
+void FaceRoiAndDetPar(        // get ROI around the facecard, rotate if necessary
     Image&        face_roi,   // out
     DetPar&       detpar_roi, // out: detpar wrt the ROI
     const Image&  img,        // in: original image
@@ -196,7 +196,7 @@ void FaceRoiAndDetPar(        // get ROI around the face, rotate if necessary
     else if (!Valid(detpar.rot) || detpar.rot == 0)
         face_roi = Image(img, rect_roi);
 
-    else // rotate image so face is upright, results go into face_roi
+    else // rotate image so facecard is upright, results go into face_roi
         warpAffine(Image(img, rect_roi), face_roi,
                    getRotationMatrix2D(cv::Point2f(float(detpar_roi.x),
                                                    float(detpar_roi.y)),

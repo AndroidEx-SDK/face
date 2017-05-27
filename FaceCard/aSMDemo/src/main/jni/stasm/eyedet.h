@@ -13,7 +13,7 @@ void OpenEyeMouthDetectors(  // possibly open OpenCV eye detectors and mouth det
 
 void DetectEyesAndMouth(     // use OpenCV detectors to find the eyes and mouth
     DetPar&      detpar,     // io: eye and mouth fields updated, other fields untouched
-    const Image& img);       // in: ROI around face (already rotated if necessary)
+    const Image& img);       // in: ROI around facecard (already rotated if necessary)
 
 } // namespace stasm
 #endif // STASM_EYEDET_H

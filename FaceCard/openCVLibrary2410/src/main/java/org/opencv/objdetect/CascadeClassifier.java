@@ -73,7 +73,7 @@ public class CascadeClassifier {
  *
  * <p>Note:</p>
  * <ul>
- *   <li> (Python) A face detection example using cascade classifiers can be
+ *   <li> (Python) A facecard detection example using cascade classifiers can be
  * found at opencv_source_code/samples/python2/facedetect.py
  * </ul>
  *
@@ -110,7 +110,7 @@ public class CascadeClassifier {
  *
  * <p>Note:</p>
  * <ul>
- *   <li> (Python) A face detection example using cascade classifiers can be
+ *   <li> (Python) A facecard detection example using cascade classifiers can be
  * found at opencv_source_code/samples/python2/facedetect.py
  * </ul>
  *
@@ -142,7 +142,7 @@ public class CascadeClassifier {
  *
  * <p>Note:</p>
  * <ul>
- *   <li> (Python) A face detection example using cascade classifiers can be
+ *   <li> (Python) A facecard detection example using cascade classifiers can be
  * found at opencv_source_code/samples/python2/facedetect.py
  * </ul>
  *
@@ -184,7 +184,7 @@ public class CascadeClassifier {
  *
  * <p>Note:</p>
  * <ul>
- *   <li> (Python) A face detection example using cascade classifiers can be
+ *   <li> (Python) A facecard detection example using cascade classifiers can be
  * found at opencv_source_code/samples/python2/facedetect.py
  * </ul>
  *

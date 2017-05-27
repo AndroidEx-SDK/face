@@ -256,7 +256,7 @@ public class MainActivity extends Activity implements PreviewCallback {
 
 		iv_canny.setImageBitmap(canny_bitmap);
 
-		// do face detect in Thread
+		// do facecard detect in Thread
 		faceDetectThread.assignTask(Params.DO_FACE_DETECT, src);
 	}
 
@@ -286,7 +286,7 @@ public class MainActivity extends Activity implements PreviewCallback {
 		} else if (points[0] == Params.ASMError.INIT_FAIL) {
 			Toast.makeText(MainActivity.this, "Error in stasm_search_single!", Toast.LENGTH_SHORT).show();
 		} else if (points[0] == Params.ASMError.NO_FACE_FOUND) {
-			Toast.makeText(MainActivity.this, "No face found in input image", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "No facecard found in input image", Toast.LENGTH_SHORT).show();
 		} else {
 			faceFound = true;
 			for (int i = 0; i < points.length / 2 - 1; i++) {

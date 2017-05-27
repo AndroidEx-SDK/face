@@ -29,8 +29,8 @@ JNIEXPORT void JNICALL Java_com_example_asm_NativeCode_DoCanny(JNIEnv* env,
 }
 
 /*
- * face detection
- * matDst: face region
+ * facecard detection
+ * matDst: facecard region
  * scaleFactor = 1.1
  * minNeighbors = 2
  * minSize = 30 * 30
@@ -80,7 +80,7 @@ JNIEXPORT void JNICALL Java_com_example_asm_NativeCode_FaceDetect(JNIEnv* env,
  *  error code:
  *  -1: illegal input Mat
  *  -2: ASM initialize error
- *  -3: no face detected
+ *  -3: no facecard detected
  */
 JNIEXPORT jintArray JNICALL Java_com_example_asm_NativeCode_FindFaceLandmarks(
 		JNIEnv* env, jobject, jlong matAddr, jfloat ratioW, jfloat ratioH) {
@@ -114,7 +114,7 @@ JNIEXPORT jintArray JNICALL Java_com_example_asm_NativeCode_FindFaceLandmarks(
 	}
 
 	if (!foundface) {
-		out[0] = -3; // error code: -3(no face found)
+		out[0] = -3; // error code: -3(no facecard found)
 		out[1] = -3;
 		img.release();
 		env->ReleaseIntArrayElements(arr, out, 0);

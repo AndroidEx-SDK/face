@@ -10,7 +10,7 @@ namespace stasm
 
 void PinnedStartShapeAndRoi(   // use the pinned landmarks to init the start shape
     Shape&         startshape, // out: the start shape (in ROI frame)
-    Image&         face_roi,   // out: ROI around face, possibly rotated upright
+    Image&         face_roi,   // out: ROI around facecard, possibly rotated upright
     DetPar&        detpar_roi, // out: detpar wrt to face_roi
     DetPar&        detpar,     // out: detpar wrt to img
     Shape&         pinned_roi, // out: pinned arg translated to ROI frame

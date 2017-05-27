@@ -208,7 +208,7 @@ static inline VEC AsRowVec(const MAT& mat) // view entire matrix as a row vector
 //   visible when saved in a shapefile with one decimal digit.
 //
 //   Unused points are mostly useful during training (it is not unusual for a
-//   landmark to be obscured in a training face).  They are also used during
+//   landmark to be obscured in a training facecard).  They are also used during
 //   a search with pinned points (non-pinned points are marked as unused in
 //   the shape which specifies the pinned points).
 
@@ -262,8 +262,8 @@ enum EYAW {
 enum ESTART // do we use the detected eyes or mouth to help position the startshape?
 // note: gaps in enum numbering are for compat with other Stasm versions
 {
-	ESTART_RECT_ONLY = 1, // use just the face det rect to align the start shape
-	ESTART_EYES = 2, // use eyes if available (as well as face rect)
+	ESTART_RECT_ONLY = 1, // use just the facecard det rect to align the start shape
+	ESTART_EYES = 2, // use eyes if available (as well as facecard rect)
 	ESTART_EYE_AND_MOUTH = 4 // uses eye(s) and mouth if both available
 };
 
@@ -272,7 +272,7 @@ static double EYAW_TO_USE_DET22 = 14; // what estimated yaw requires the yaw22 m
 static double EYAW_TO_USE_DET45 = 35;// ditto for yaw45 model
 #endif
 
-struct DetPar // the structure describing a face detection
+struct DetPar // the structure describing a facecard detection
 {
 	double x, y; // center of detector shape
 	double width, height; // width and height of detector shape
@@ -388,7 +388,7 @@ Image FlipImg(const Image& img); // in: flip image horizontally (mirror image)
 
 void FlipImgInPlace(Image& img); // io: flip image horizontally (mirror image)
 
-void OpenDetector( // open face or feature detector from its XML file
+void OpenDetector( // open facecard or feature detector from its XML file
 		cv::CascadeClassifier& cascade, // out
 		const char* filename, // in: basename.ext of cascade
 		const char* datadir); // in
@@ -405,7 +405,7 @@ vec_Rect Detect( // detect faces or facial features
 // TODO Following commented out to avoid circular dependency.
 // int EyawAsModIndex(EYAW eyaw, const vec_Mod& mods);
 
-bool IsLeftFacing(EYAW eyaw); // true if eyaw is for a left facing face
+bool IsLeftFacing(EYAW eyaw); // true if eyaw is for a left facing facecard
 
 EYAW DegreesAsEyaw( // this determines what model is best for a given yaw
 		double yaw, // in: yaw in degrees, negative if left facing

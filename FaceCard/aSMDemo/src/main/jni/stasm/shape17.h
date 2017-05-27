@@ -53,7 +53,7 @@ static const char *LANDMARKS_17_NAMES[] =
 
 extern const Shape MEANSHAPE17; // mean 17 point shape
 
-Shape Shape17(           // convert an arb face shape to a 17 point shape
+Shape Shape17(           // convert an arb facecard shape to a 17 point shape
     const Shape& shape); // in
 
 } // namespace stasm

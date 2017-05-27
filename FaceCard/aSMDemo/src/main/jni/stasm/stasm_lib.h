@@ -9,15 +9,15 @@
 // Errors in OpenCV routines called by Stasm and out-of-memory errors are
 // handled in the same way.
 //
-// Typical usage in multiple face scenario with stasm_search_auto:
+// Typical usage in multiple facecard scenario with stasm_search_auto:
 //
 //      stasm_init()
 //      load image from disk
 //      optionally present the image to the user
 //      stasm_open_image()
-//      while stasm_find_face() finds another face:
-//          save the face shape (and optionally present the image to the user)
-//      optionally present the image with all face shapes to the user
+//      while stasm_find_face() finds another facecard:
+//          save the facecard shape (and optionally present the image to the user)
+//      optionally present the image with all facecard shapes to the user
 //      optionally call stasm_search_pinned to correct any bad faces
 //
 // The interface is defined in vanilla C so can be used by code
@@ -68,7 +68,7 @@ extern const char* const stasm_VERSION;
 
 extern "C"
 int stasm_init(              // call once, at bootup
-    const char*  datadir,    // in: directory of face detector files
+    const char*  datadir,    // in: directory of facecard detector files
     int          trace);     // in: 0 normal use, 1 trace to stdout and stasm.log
 
 extern "C"
@@ -77,25 +77,25 @@ int stasm_open_image(        // call once per image, detect faces
     int          width,      // in: image width
     int          height,     // in: image height
     const char*  imgpath,    // in: image path, used only for err msgs and debug
-    int          multiface,  // in: 0=return only one face, 1=allow multiple faces
-    int          minwidth);  // in: min face width as percentage of img width
+    int          multiface,  // in: 0=return only one facecard, 1=allow multiple faces
+    int          minwidth);  // in: min facecard width as percentage of img width
 
 extern "C"
 int stasm_search_auto(       // call repeatedly to find all faces
-    int*         foundface,  // out: 0=no more faces, 1=found face
+    int*         foundface,  // out: 0=no more faces, 1=found facecard
     float*       landmarks); // out: x0, y0, x1, y1, ..., caller must allocate
 
 extern "C"
 int stasm_search_single(     // wrapper for stasm_search_auto and friends
-    int*         foundface,  // out: 0=no face, 1=found face
+    int*         foundface,  // out: 0=no facecard, 1=found facecard
     float*       landmarks,  // out: x0, y0, x1, y1, ..., caller must allocate
     const char*  img,        // in: gray image data, top left corner at 0,0
     int          width,      // in: image width
     int          height,     // in: image height
     const char*  imgpath,    // in: image path, used only for err msgs and debug
-    const char*  datadir);   // in: directory of face detector files
+    const char*  datadir);   // in: directory of facecard detector files
 
-extern "C"                   // find landmarks, no OpenCV face detect
+extern "C"                   // find landmarks, no OpenCV facecard detect
 int stasm_search_pinned(     // call after the user has pinned some points
     float*       landmarks,  // out: x0, y0, x1, y1, ..., caller must allocate
     const float* pinned,     // in: pinned landmarks (0,0 points not pinned)

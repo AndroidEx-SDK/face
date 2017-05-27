@@ -8,22 +8,22 @@ namespace stasm
 {
 typedef vector<DetPar> vec_DetPar;
 
-static cv::CascadeClassifier facedet_g;  // the face detector
+static cv::CascadeClassifier facedet_g;  // the facecard detector
 
 static double BORDER_FRAC = 0.1; // fraction of image width or height
                                  // use 0.0 for no border
 
 //-----------------------------------------------------------------------------
 
-void FaceDet::OpenFaceDetector_( // called by stasm_init, init face det from XML file
-    const char* datadir,         // in: directory of face detector files
+void FaceDet::OpenFaceDetector_( // called by stasm_init, init facecard det from XML file
+    const char* datadir,         // in: directory of facecard detector files
     void*)                       // in: unused (func signature compatibility)
 {
     OpenDetector(facedet_g, "haarcascade_frontalface_alt2.xml",  datadir);
 }
 
-// If a face is near the edge of the image, the OpenCV detectors tend to
-// return a too-small face rectangle.  By adding a border around the edge
+// If a facecard is near the edge of the image, the OpenCV detectors tend to
+// return a too-small facecard rectangle.  By adding a border around the edge
 // of the image we mitigate this problem.
 
 static Image EnborderImg(    // return the image with a border
@@ -40,7 +40,7 @@ static Image EnborderImg(    // return the image with a border
     return bordered_img;
 }
 
-void DetectFaces(          // all face rects into detpars
+void DetectFaces(          // all facecard rects into detpars
     vec_DetPar&  detpars,  // out
     const Image& img,      // in
     int          minwidth) // in: as percent of img width
@@ -64,25 +64,25 @@ void DetectFaces(          // all face rects into detpars
     static const int    MIN_NEIGHBORS  = 3;
     static const int    DETECTOR_FLAGS = 0;
 
-    vec_Rect facerects = // all face rects in image
+    vec_Rect facerects = // all facecard rects in image
         Detect(equalized_img, &facedet_g, NULL,
                SCALE_FACTOR, MIN_NEIGHBORS, DETECTOR_FLAGS, minpix);
 
-    // copy face rects into the detpars vector
+    // copy facecard rects into the detpars vector
 
     detpars.resize(NSIZE(facerects));
     for (int i = 0; i < NSIZE(facerects); i++)
     {
         Rect* facerect = &facerects[i];
         DetPar detpar; // detpar constructor sets all fields INVALID
-        // detpar.x and detpar.y is the center of the face rectangle
+        // detpar.x and detpar.y is the center of the facecard rectangle
         detpar.x = facerect->x + facerect->width / 2.;
         detpar.y = facerect->y + facerect->height / 2.;
         detpar.x -= leftborder; // discount the border we added earlier
         detpar.y -= topborder;
         detpar.width  = double(facerect->width);
         detpar.height = double(facerect->height);
-        detpar.yaw = 0; // assume face has no yaw in this version of Stasm
+        detpar.yaw = 0; // assume facecard has no yaw in this version of Stasm
         detpar.eyaw = EYAW00;
         detpars[i] = detpar;
     }
@@ -139,7 +139,7 @@ static void DiscardMissizedFaces(
     }
 }
 
-static void TraceFaces(         // write image showing detected face rects
+static void TraceFaces(         // write image showing detected facecard rects
     const vec_DetPar& detpars,  // in
     const Image&      img,      // in
     const char*       filename) // in
@@ -169,8 +169,8 @@ static void TraceFaces(         // write image showing detected face rects
 void FaceDet::DetectFaces_(  // call once per image to find all the faces
     const Image& img,        // in: the image (grayscale)
     const char*,             // in: unused (match virt func signature)
-    bool         multiface,  // in: if false, want only the best face
-    int          minwidth,   // in: min face width as percentage of img width
+    bool         multiface,  // in: if false, want only the best facecard
+    int          minwidth,   // in: min facecard width as percentage of img width
     void*        user)       // in: unused (match virt func signature)
 {
     CV_Assert(user == NULL);
@@ -186,17 +186,17 @@ void FaceDet::DetectFaces_(  // call once per image to find all the faces
     }
     else
     {
-        // order faces on decreasing width, keep only the first (the largest face)
+        // order faces on decreasing width, keep only the first (the largest facecard)
         sort(detpars_.begin(), detpars_.end(), DecreasingWidth);
         TraceFaces(detpars_, img, "facedet.bmp");
         if (NSIZE(detpars_))
             detpars_.resize(1);
     }
-    iface_ = 0; // next invocation of NextFace_ must get first face
+    iface_ = 0; // next invocation of NextFace_ must get first facecard
 }
 
-// Get the (next) face from the image.
-// If no face available, return detpar.x INVALID.
+// Get the (next) facecard from the image.
+// If no facecard available, return detpar.x INVALID.
 // Eyes, mouth, and rot in detpar always returned INVALID.
 
 const DetPar FaceDet::NextFace_(void)

@@ -71,7 +71,7 @@ public class FaceDetectActivity extends Activity {
 					MyToast.showToast(getApplicationContext(),"Done Face Detection");
 					int checkFace = faceDetector.findFaces(detectFaceImage, face);
 					if (checkFace <1) {
-						MyToast.showToast(getApplicationContext(),"No face detected!Try again! ");
+						MyToast.showToast(getApplicationContext(),"No facecard detected!Try again! ");
 					}
 					break;
 				case 1:
@@ -171,13 +171,13 @@ public class FaceDetectActivity extends Activity {
 		int w = rect.width();
 		int h = rect.height();
 		int s = w*h;
-		Log.i(tag, "width of face = " + w + "高h = " + h + "area of face = " + s);
+		Log.i(tag, "width of facecard = " + w + "高h = " + h + "area of facecard = " + s);
 		if(s < 10000){
-			Log.i(tag, "Unusefal face, give up!");
+			Log.i(tag, "Unusefal facecard, give up!");
 			//MyToast.showToast(getApplicationContext(),"Face Detect Failure!");
 			return false;
 		} else{
-			Log.i(tag, "Usefal face, keep it!");
+			Log.i(tag, "Usefal facecard, keep it!");
 			return true;
 		}
 	}
@@ -190,7 +190,7 @@ public class FaceDetectActivity extends Activity {
 		int nFace = faceDetector.findFaces(detectFaceImage, face);
 		Log.i(tag, "detect number of faces：n = " + nFace);
 		if (nFace<1) {
-			Log.i(tag, "there is no face in the image");
+			Log.i(tag, "there is no facecard in the image");
 			//MyToast.showToast(getApplicationContext(),"Failure");
 		} else {
 			for(int i=0; i<nFace; i++){
