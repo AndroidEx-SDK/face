@@ -86,16 +86,17 @@ public class InitUtil {
      */
     public static void saveBitmap(String path, String picName, Bitmap bmp) {
         Log.e(TAG, "保存图片");
-        File f = new File(path, picName);
-        if (f.exists()) {
-            f.delete();
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
         }
+        File f = new File(path, picName);
         try {
             FileOutputStream out = new FileOutputStream(f);
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
-            Log.i(TAG, "已经保存");
+            Log.i(TAG, "====已经保存");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -107,21 +108,26 @@ public class InitUtil {
      * 用JSON文件保存数组
      */
     public static void saveJsonStringArray(String[] data) {
+        String str = getString2Txt();
 
         JSONObject allData = new JSONObject();//建立最外面的节点对象
         JSONArray sing = new JSONArray();//定义数组
+
         for (int x = 0; x < data.length; x++) {//将数组内容配置到相应的节点
             JSONObject temp = new JSONObject();//JSONObject包装数据,而JSONArray包含多个JSONObject
             try {
-                temp.put("myurl", data[x]); //JSONObject是按照key:value形式保存
 
+                temp.put("name" + x, data[x]); //JSONObject是按照key:value形式保存
+                Log.e(TAG, "====data:  " + x + ":::" + data[x]);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             sing.put(temp);//保存多个JSONObject
         }
         try {
-            allData.put("urldata", sing);//把JSONArray用最外面JSONObject包装起来
+
+            allData.put("cardinfo", sing);//把JSONArray用最外面JSONObject包装起来
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -130,15 +136,20 @@ public class InitUtil {
             return;//返回到程序的被调用处
         }
         File file = new File(Environment.getExternalStorageDirectory()
-                + File.separator + "mldndata" + File.separator
-                + "json.txt");//要输出的文件路径
+                + File.separator + "urldata"
+                + File.separator + "json.txt");//要输出的文件路径
         if (!file.getParentFile().exists()) {//文件不存在
             file.getParentFile().mkdirs();//创建文件夹
         }
         PrintStream out = null;
         try {
             out = new PrintStream(new FileOutputStream(file));
-            out.print(allData.toString());//将数据变为字符串后保存
+            if (str!=null&&str!=""){
+
+                out.append("["+str+","+allData.toString()+"]");//将数据变为字符串后保存
+            }else {
+                out.print(allData.toString());
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -150,39 +161,58 @@ public class InitUtil {
 
 
     /**
+     * [{"cardinfo":[{"name0":"李永平"},{"name1":"\/sdcard\/face\/1495891410072.png"},{"name2":"男"},{"name3":"汉"},{"name4":"19910210"},{"name5":"河南省济源市下冶镇三教村"},{"name6":"410881199102106519"},{"name7":"\/sdcard\/face\/1495891410127.png"}]},
+     {"cardinfo":[{"name0":"李永平"},{"name1":"\/sdcard\/face\/1495891422651.png"},{"name2":"男"},{"name3":"汉"},{"name4":"19910210"},{"name5":"河南省济源市下冶镇三教村"},{"name6":"410881199102106519"},{"name7":"\/sdcard\/face\/1495891422739.png"}]}]
+
      * 解析JSON文件的简单数组
      */
-    public static List<Map<String, String>> parseJson() throws Exception {
-        String data=getString2Txt();
+    public static List<Map<String, String>> parseJson(String idnum) throws Exception {
+        String data = getString2Txt();
         List<Map<String, String>> all = new ArrayList<Map<String, String>>();
-        if (data==null){
-            JSONArray jsonArr = new JSONArray(data);    //是数组
-            for (int x = 0; x < jsonArr.length(); x++) {
+        if (data != null) {
+            JSONArray array = new JSONArray(data);//是数组
+            for (int i = 0; i < array.length(); i++) {
                 Map<String, String> map = new HashMap<String, String>();
-                JSONObject jsonobj = jsonArr.getJSONObject(x);
-                map.put("name", jsonobj.getString("head"));
-                map.put("photo", jsonobj.getString("photo"));
-                map.put("sex", jsonobj.getString("sex"));
-                map.put("nation", jsonobj.getString("nation"));
-                map.put("birthday", jsonobj.getString("birthday"));
-                map.put("address", jsonobj.getString("address"));
-                map.put("idnum", jsonobj.getString("idnum"));
-                map.put("head", jsonobj.getString("head"));
-                all.add(map);
+                JSONObject temp = (JSONObject) array.get(i);
+                JSONArray urldata = temp.getJSONArray("cardinfo");
+                JSONObject jsonobj = urldata.getJSONObject(6);
+                if (jsonobj.getString("name6").equals(idnum)){
+                    jsonobj = urldata.getJSONObject(0);
+                    map.put("name", jsonobj.getString("name0"));
+                    jsonobj = urldata.getJSONObject(1);
+                    map.put("photo", jsonobj.getString("name1"));
+                    jsonobj = urldata.getJSONObject(2);
+                    map.put("sex", jsonobj.getString("name2"));
+                    jsonobj = urldata.getJSONObject(3);
+                    map.put("nation", jsonobj.getString("name3"));
+                    jsonobj = urldata.getJSONObject(4);
+                    map.put("birthday", jsonobj.getString("name4"));
+                    jsonobj = urldata.getJSONObject(5);
+                    map.put("address", jsonobj.getString("name5"));
+                    jsonobj = urldata.getJSONObject(6);
+                    map.put("idnum", jsonobj.getString("name6"));
+                    jsonobj = urldata.getJSONObject(7);
+                    map.put("head", jsonobj.getString("name7"));
+                    all.add(map);
+                    return all;
+                }
             }
         }
-
-        return all;
+        return null;
     }
 
+    /**
+
+     * @return
+     */
     public static String getString2Txt() {
-        String str = null;
+        String str = "";
         try {
             File urlFile = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + "mldndata" + File.separator
-                    + "json.txt");
-            if (!urlFile.exists()){
-                    urlFile.mkdir();
+                    + File.separator + "urldata"
+                    + File.separator + "json.txt");//Environment.getExternalStorageDirectory()+ File.separator +"json.txt"
+            if (!urlFile.exists()) {
+                urlFile.mkdir();
             }
             InputStreamReader isr = new InputStreamReader(new FileInputStream(urlFile), "UTF-8");
             BufferedReader br = new BufferedReader(isr);
@@ -190,6 +220,7 @@ public class InitUtil {
             String mimeTypeLine = null;
             while ((mimeTypeLine = br.readLine()) != null) {
                 str = str + mimeTypeLine;
+                Log.e(TAG, "====str:  " + str);
             }
             return str;
         } catch (Exception e) {
@@ -199,7 +230,7 @@ public class InitUtil {
                 return str;
             }
         }
-        Log.e(TAG, "文件为空");
+        Log.e(TAG, "===文件为空");
         return null;
     }
 

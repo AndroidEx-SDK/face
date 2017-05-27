@@ -1,4 +1,4 @@
-package com.androidex.face.db;
+package com.androidex.face.utils;
 
 /**
  * Created by cts on 17/4/7.

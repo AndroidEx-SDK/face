@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidex.face.db.FaceDao;
-import com.androidex.face.db.UserInfo;
+import com.androidex.face.utils.UserInfo;
 import com.androidex.face.idcard.util.IdCardUtil;
 import com.androidex.face.utils.InitUtil;
 import com.kongqw.interfaces.OnFaceDetectorListener;
@@ -332,7 +332,7 @@ public class FaceCardActivity extends AppCompatActivity implements OnFaceDetecto
                     }
                 } else {
                     mCmpPic.setText("相似度 :    ");
-                    face_time.setText("识别时间:");
+                    face_time.setText("识别时间:  ");
                     mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
                 }
             }

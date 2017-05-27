@@ -13,7 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.androidex.face.db.FaceDao;
-import com.androidex.face.db.UserInfo;
+import com.androidex.face.utils.UserInfo;
 
 import java.util.ArrayList;
 

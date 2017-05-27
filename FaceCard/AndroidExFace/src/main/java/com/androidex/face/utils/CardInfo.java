@@ -1,4 +1,4 @@
-package com.androidex.face.db;
+package com.androidex.face.utils;
 
 /**
  * Created by cts on 17/4/7.
@@ -12,6 +12,10 @@ public class CardInfo {
     public String birthday;
     public String address;
     public String idnum;
+    public String head;
+
+    public CardInfo() {
+    }
 
     /**
      * db.execSQL("create table cardinfo(" +
@@ -25,7 +29,7 @@ public class CardInfo {
      * "idnum text"
      * );
      */
-    public CardInfo(String name, String imgPic, String sex, String nation, String birthday, String address, String idnum) {
+    public CardInfo(String name, String imgPic, String sex, String nation, String birthday, String address, String idnum, String head) {
         this.name = name;
         this.imgPic = imgPic;
         this.sex = sex;
@@ -33,9 +37,8 @@ public class CardInfo {
         this.birthday = birthday;
         this.address = address;
         this.idnum = idnum;
-    }
+        this.head = head;
 
-    public CardInfo() {
     }
 
     public String getName() {
@@ -94,6 +97,14 @@ public class CardInfo {
         this.idnum = idnum;
     }
 
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
+    }
+
     @Override
     public String toString() {
         return "CardInfo{" +
@@ -104,6 +115,7 @@ public class CardInfo {
                 ", birthday='" + birthday + '\'' +
                 ", address='" + address + '\'' +
                 ", idnum='" + idnum + '\'' +
+                ", head='" + head + '\'' +
                 '}';
     }
 }

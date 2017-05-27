@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.androidex.face.utils.UserInfo;
+
 import java.util.ArrayList;
 
 /**
@@ -33,7 +35,6 @@ public class FaceDao {
     /**
      * 遍历查询所有数据
      */
-
     public ArrayList<UserInfo> getUserinfo(){
         ArrayList<UserInfo> users = null;
         SQLiteDatabase db = helper.getReadableDatabase();

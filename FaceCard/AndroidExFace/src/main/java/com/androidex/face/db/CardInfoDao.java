@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.androidex.face.utils.CardInfo;
+
 import java.util.ArrayList;
 
 /**
@@ -62,6 +64,7 @@ public class CardInfoDao {
                 mCardInfo.birthday = c.getString(c.getColumnIndex("birthday"));
                 mCardInfo.address = c.getString(c.getColumnIndex("address"));
                 mCardInfo.idnum = c.getString(c.getColumnIndex("idnum"));
+                mCardInfo.head = c.getString(c.getColumnIndex("head"));
                 cardInfos.add(mCardInfo);
             }
             c.close();
@@ -81,7 +84,8 @@ public class CardInfoDao {
             String nation = cursor.getString(cursor.getColumnIndex("nation"));
             String birthday = cursor.getString(cursor.getColumnIndex("birthday"));
             String address = cursor.getString(cursor.getColumnIndex("address"));
-            CardInfo cardInfo = new CardInfo(name,imgPic,sex,nation,birthday,address,idnum);
+            String head = cursor.getString(cursor.getColumnIndex("head"));
+            CardInfo cardInfo = new CardInfo(name,imgPic,sex,nation,birthday,address,idnum,head);
             return cardInfo;
         }
         return null;

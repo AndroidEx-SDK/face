@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.androidex.face.db.CardInfoDao;
 import com.androidex.face.db.FaceDao;
-import com.androidex.face.db.UserInfo;
+import com.androidex.face.utils.UserInfo;
 import com.androidex.face.idcard.util.IdCardUtil;
 import com.androidex.face.utils.InitUtil;
 import com.kongqw.interfaces.OnFaceDetectorListener;
@@ -191,14 +191,14 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_saveCardInfo://存储身份信息
-                if (idCard != null && head != null) {
+                if (idCard == null || head == null) {
+                    Toast.makeText(this, "身份证信息为空", Toast.LENGTH_LONG).show();
+                } else {
                     saveCardInfo(idCard, head);
                     idCard = null;
                     head = null;
-                } else {
-                    Toast.makeText(this, "身份证信息为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "存储成功", Toast.LENGTH_LONG).show();
                 }
-
                 break;
 
             case R.id.btn_lookFaceList://查看人脸列表
@@ -222,7 +222,6 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
         if (mIdCardUtil == null) {
             mIdCardUtil = new IdCardUtil(this, this);
         }
-        Log.e(TAG, "onOtherError: ");
         mIdCardUtil.openIdCard();
         mIdCardUtil.readIdCard();
     }
@@ -244,12 +243,11 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
 
         if (newMat != null && mCharacteristic != null) {
             long startTime = System.currentTimeMillis();
-            double cmp = FaceUtil.match(mCharacteristic, newMat);//计算相似度,临时变量
+            double cmp = FaceUtil.match(mCharacteristic, newMat);//计算相似度
             long afterTime = System.currentTimeMillis();
-            UpdateFaceResult(mat, rect, cmp, startTime - afterTime);
+            long time = startTime - afterTime;
+            UpdateFaceResult(mat, rect, cmp, time);
         }
-
-
     }
 
     private void UpdateFaceResult(final Mat mat, final Rect rect, final double lcmp, final long time) {
@@ -260,9 +258,9 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                     if (null == mat) {
                         mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
                     } else {
-                        if (time>5){
-                            face_time.setText("识别时间:" + (time) + "ms");
-                        }
+
+                        face_time.setText("识别时间:" + (time) + "ms");
+
                         if (lcmp > 50) {
                             mCmpPic.setText(String.format("相似度 :  高（%.2f%%）", lcmp));
                         } else if (lcmp >= 40 && lcmp <= 50) {
@@ -279,7 +277,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } else {
                     mCmpPic.setText("相似度 :    ");
-                    face_time.setText("识别时间:");
+                    face_time.setText("识别时间:  ");
                     mImageViewFace1.setImageResource(R.mipmap.ic_contact_picture);
                 }
             }
@@ -292,12 +290,15 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
     public Map<String, String> getMap(String idnum) {
         List<Map<String, String>> maps = null;
         try {
-            maps = InitUtil.parseJson();
+            maps = InitUtil.parseJson(idnum);
 
             for (int i = 0; i < maps.size(); i++) {
                 Map<String, String> map = maps.get(i);
                 if (map.get("idnum").equals(idnum)) {
+                    Log.e(TAG, "====idnum: " + idnum);
                     return map;
+                } else {
+                    Log.e(TAG, "====idnum: null");
                 }
             }
         } catch (Exception e) {
@@ -326,15 +327,16 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                         Utils.bitmapToMat(bitmap, mat);
                         //提取图片特征//从存储的信息中取出的图片
                         newMat = FaceUtil.extractORB(mat);
+                        Log.e(TAG, "====headPath: " + headPath);
                     }
+                    Log.e(TAG, "====map:  bmp");
                 } else {
+
+                    Log.e(TAG, "====map:  null");
                     if (matFace == null) matFace = new MatOfRect();
                     if (newMat == null) newMat = new Mat();
-
                     Bitmap bmp = FaceUtil.getSizeBmp(FaceUtil.grey(photo));
-
                     Utils.bitmapToMat(bmp, mat);
-
                     if (mJavaDetector != null) {
                         //Log.e(TAG, "onCreate: 级联容器加载成功");
                         mJavaDetector.detectMultiScale(mat, matFace);
@@ -345,10 +347,8 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                                     + rect.width, rect.y + rect.height), new Scalar(0, 255, 0));
                             newMat = FaceUtil.grayChange(mat, rect);//灰度处理
                             newMat = FaceUtil.extractORB(newMat);//提取图片特征
-
                         }
                     }
-
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -432,7 +432,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
         long millis = System.currentTimeMillis();
         InitUtil.saveBitmap("/sdcard/face/", millis + ".png", photo);
         long millis_head = System.currentTimeMillis();
-        InitUtil.saveBitmap("/sdcard/face/", millis_head + ".png", photo);
+        InitUtil.saveBitmap("/sdcard/face/", millis_head + ".png", head);
 
         String[] strArray = new String[8];
 
