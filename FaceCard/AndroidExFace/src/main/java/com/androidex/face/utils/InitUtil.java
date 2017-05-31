@@ -144,10 +144,12 @@ public class InitUtil {
         PrintStream out = null;
         try {
             out = new PrintStream(new FileOutputStream(file));
-            if (str!=null&&str!=""){
+            if (str != null && str != "") {
+                Log.e(TAG, "====str[]:  " + str);
+                out.append("[" + str + "," + allData.toString() + "]");//将数据变为字符串后保存
+                Log.e(TAG, "====[]:  " + "[" + str + "," + allData.toString() + "]");
 
-                out.append("["+str+","+allData.toString()+"]");//将数据变为字符串后保存
-            }else {
+            } else {
                 out.print(allData.toString());
             }
         } catch (FileNotFoundException e) {
@@ -161,13 +163,11 @@ public class InitUtil {
 
 
     /**
-     * [{"cardinfo":[{"name0":"李永平"},{"name1":"\/sdcard\/face\/1495891410072.png"},{"name2":"男"},{"name3":"汉"},{"name4":"19910210"},{"name5":"河南省济源市下冶镇三教村"},{"name6":"410881199102106519"},{"name7":"\/sdcard\/face\/1495891410127.png"}]},
-     {"cardinfo":[{"name0":"李永平"},{"name1":"\/sdcard\/face\/1495891422651.png"},{"name2":"男"},{"name3":"汉"},{"name4":"19910210"},{"name5":"河南省济源市下冶镇三教村"},{"name6":"410881199102106519"},{"name7":"\/sdcard\/face\/1495891422739.png"}]}]
-
+     * <p>
      * 解析JSON文件的简单数组
      */
     public static List<Map<String, String>> parseJson(String idnum) throws Exception {
-        String data = getString2Txt();
+        String data = "["+getString2Txt()+"]";
         List<Map<String, String>> all = new ArrayList<Map<String, String>>();
         if (data != null) {
             JSONArray array = new JSONArray(data);//是数组
@@ -176,7 +176,7 @@ public class InitUtil {
                 JSONObject temp = (JSONObject) array.get(i);
                 JSONArray urldata = temp.getJSONArray("cardinfo");
                 JSONObject jsonobj = urldata.getJSONObject(6);
-                if (jsonobj.getString("name6").equals(idnum)){
+                if (jsonobj.getString("name6").equals(idnum)) {
                     jsonobj = urldata.getJSONObject(0);
                     map.put("name", jsonobj.getString("name0"));
                     jsonobj = urldata.getJSONObject(1);
@@ -203,6 +203,7 @@ public class InitUtil {
 
     /**
      * 读取文件，
+     *
      * @return
      */
     public static String getString2Txt() {
@@ -219,9 +220,13 @@ public class InitUtil {
 
             String mimeTypeLine = null;
             while ((mimeTypeLine = br.readLine()) != null) {
+
                 str = str + mimeTypeLine;
                 Log.e(TAG, "====str:  " + str);
             }
+            str=trimFirstAndLastChar(str,"[".toCharArray()[0]);
+            str=trimFirstAndLastCharEndIndex(str,"]".toCharArray()[0]);
+            Log.e(TAG, "====去除两端[]str:  " + str);
             return str;
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,6 +236,44 @@ public class InitUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 去除字符串首尾出现的某个字符.
+     * @param source 源字符串.
+     * @param element 需要去除的字符.
+     * @return String.
+     */
+    public static String trimFirstAndLastChar(String source,char element){
+        boolean beginIndexFlag = true;
+        boolean endIndexFlag = false;
+        do{
+            int beginIndex = source.indexOf(element) == 0 ? 1 : 0;
+            int endIndex = source.lastIndexOf(element) + 1 == source.length() ? source.lastIndexOf(element) : source.length();
+            source = source.substring(beginIndex, endIndex);
+            beginIndexFlag = (source.indexOf(element) == 0);
+            endIndexFlag = (source.lastIndexOf(element) + 1 == source.length());
+        } while (beginIndexFlag || endIndexFlag);
+        return source;
+    }
+
+    /**
+     * 去除字符串首尾出现的某个字符.
+     * @param source 源字符串.
+     * @param element 需要去除的字符.
+     * @return String.
+     */
+    public static String trimFirstAndLastCharEndIndex(String source,char element){
+        boolean beginIndexFlag =false;
+        boolean endIndexFlag = true;
+        do{
+            int beginIndex = source.indexOf(element) == 0 ? 1 : 0;
+            int endIndex = source.lastIndexOf(element) + 1 == source.length() ? source.lastIndexOf(element) : source.length();
+            source = source.substring(beginIndex, endIndex);
+            beginIndexFlag = (source.indexOf(element) == 0);
+            endIndexFlag = (source.lastIndexOf(element) + 1 == source.length());
+        } while (beginIndexFlag || endIndexFlag);
+        return source;
     }
 
     public static JSONObject getJsonSimple(IDCard idCard, Bitmap bmp) {
