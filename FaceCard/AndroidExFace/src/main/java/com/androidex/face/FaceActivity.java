@@ -105,7 +105,6 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
         mCardInfoDao = CardInfoDao.getInstance(this);
     }
 
-
     /**
      * 检测人脸是否存在，相似度大于60%为存在，不予存储
      *
@@ -210,6 +209,16 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                 mIdCardUtil.close();
                 mIdCardUtil.closeIdCard();
                 mIdCardUtil.closeReadThread();
+                break;
+
+            case R.id.btn_startread:
+                //打开阅读器
+                if (mIdCardUtil == null) {
+                    mIdCardUtil = new IdCardUtil(this, this);
+                }
+                mIdCardUtil.openIdCard();
+                mIdCardUtil.readIdCard();
+
                 break;
 
         }
@@ -351,7 +360,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                             imageViewPhoto.setImageResource(R.drawable.photo);
                             mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
                             newMat = null;
-                            newMat = null;
+                            head = null;
 
                         } else {
                             textViewName.setText("姓名:" + idCard.getName());
@@ -364,7 +373,6 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                             imageViewPhoto.setImageBitmap(photo);
                             mImageViewFace2.setImageBitmap(photo);
                         }
-
                     }
                 });
             } else {
@@ -384,7 +392,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                         mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
                         matFace = null;
                         newMat = null;
-
+                        head = null;
 
                     }
                 });
@@ -406,6 +414,7 @@ public class FaceActivity extends AppCompatActivity implements View.OnClickListe
                     mImageViewFace2.setImageResource(R.mipmap.ic_contact_picture);
                     matFace = null;
                     newMat = null;
+                    head = null;
                 }
             });
         }
